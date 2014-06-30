@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      #myCanvas {
+        border: 1px solid #9C9898;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="578" height="200"></canvas>
+    <script>
+
+	var drawGear = function(context,options){
+	if(context){
+		var default_options = {
+			centerX: 50,
+			centerY: 50,
+			numberofTeath: 10,
+			outerRadius:6,
+			curve:6,
+			pitch:10,
+			innerRadius:4,
+			rotateAngle:0,
+			color:'#000000'
+			};
+
+		options = options || {};
+		for (var opt in default_options)
+			if (default_options.hasOwnProperty(opt) && !options.hasOwnProperty(opt))
+				options[opt] = default_options[opt];
+				
+		  var enddeg=0,deg=0;
+		  var angle=180/options.numberofTeath;
+		  radius = options.numberofTeath*options.outerRadius*2/Math.PI;
+		  
+		  var rad2deg = 180/Math.PI;
+		  //circle
+		  context.beginPath();
+		  context.arc(options.centerX, options.centerY, options.innerRadius, 0, 2 * Math.PI, false);
+		  context.strokeStyle = options.color;
+		  context.stroke();
+		  
+		  context.beginPath();	  
+		  for(var i=0;i<=options.numberofTeath;++i)
+		  {
+			sdeg = i*angle*2+options.rotateAngle;
+			senddeg= angle- (angle/options.curve);
+			enddeg= (sdeg+senddeg)/rad2deg;
+			deg = sdeg/rad2deg;
+			context.arc(options.centerX, options.centerY, radius, deg, enddeg, false);
+			 sdeg = sdeg+angle;
+			enddeg= (sdeg+senddeg)/rad2deg;
+			deg = sdeg/rad2deg;
+			context.arc(options.centerX, options.centerY, radius-options.pitch, deg, enddeg, false);
+		  }
+		  context.strokeStyle = options.color;
+		  context.stroke();
+		  context.closePath();
+	  }
+   }
+    	
+  var canvas = document.getElementById('myCanvas');
+  var context = canvas.getContext('2d');
+  var centerCanX = canvas.width / 2;
+  var centerCanY = canvas.height / 2;
+  var speed = 200;
+  var option1 = {
+			centerX: centerCanX,
+			centerY: centerCanY,
+			numberofTeath: 10,
+			outerRadius:6,
+			curve:6,
+			pitch:10,
+			innerRadius:4,
+			rotateAngle:0,
+			color:'#003300'
+			};
+  var option2 = {
+			centerX: centerCanX+70,
+			centerY: centerCanY,
+			numberofTeath: 10,
+			outerRadius:6,
+			curve:6,
+			pitch:10,
+			innerRadius:4,
+			rotateAngle:0,
+			color:'#FF3300'
+			};
+  var angleChange = 10;
+  drawGear(context,option1);    
+  drawGear(context,option2);
+  setInterval(function(){
+    context.clearRect ( 0 , 0 , canvas.width , canvas.height );
+	option1.rotateAngle = (option1.rotateAngle - angleChange + 360 )%360;
+	option2.rotateAngle = (option2.rotateAngle + angleChange)%360 ;
+    drawGear(context,option1);    
+    drawGear(context,option2);
+  } 
+  , speed);
+
+ </script>
+  </body>
+</html>
